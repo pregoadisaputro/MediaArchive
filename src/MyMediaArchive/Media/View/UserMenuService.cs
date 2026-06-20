@@ -35,6 +35,7 @@ public sealed class UserMenuService
 
         if (isItemExist != null)
         {
+            AnsiConsole.WriteLine($"Media with Title: {title} | Year {year} already exist.");
             return;
         }
 
@@ -79,6 +80,42 @@ public sealed class UserMenuService
 
         var existingItem = _mediaService.GetAll();
 
-        var id = AnsiConsole.Ask<int>("ID:");
+        if (existingItem == null || !existingItem.Any())
+        {
+            AnsiConsole.WriteLine("Media does not exist yet.");
+            return;
+        }
+
+        RenderTable.Table(existingItem, "Media to Delete:");
+
+        var userPrompt = AnsiConsole.Prompt(
+            new MultiSelectionPrompt<string>()
+                .Title("Select Media to Delete:")
+                .AddChoices(existingItem.Select(i => $"{i.Title} | {i.Year}"))
+        );
+
+        if (userPrompt.Count == 0)
+        {
+            AnsiConsole.WriteLine("Cancelled!");
+            return;
+        }
+
+        foreach (var choice in userPrompt)
+        {
+            var isItemExist = existingItem.FirstOrDefault(i => $"{i.Title} | {i.Year}" == choice);
+
+            if (isItemExist != null)
+            {
+                if (AnsiConsole.Confirm("Are you sure want to Delete?"))
+                {
+                    _mediaService.DeleteMedia(isItemExist);
+                    AnsiConsole.MarkupLine("Removed!");
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine("Cancelled!");
+                }
+            }
+        }
     }
 }

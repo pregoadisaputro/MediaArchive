@@ -13,7 +13,23 @@ public sealed class MediaService
         mediaItems = JsonService.LoadData<List<MediaItem>>(_filePath) ?? [];
     }
 
-    public IReadOnlyList<MediaItem> GetAll() => mediaItems.AsReadOnly();
+    public IReadOnlyList<MediaItem> GetAll()
+    {
+        return mediaItems
+            .OrderByDescending(i => i.CreatedAt)
+            .Select(i => new MediaItem
+            {
+                Id = i.Id,
+                Title = i.Title,
+                Rating = i.Rating,
+                Year = i.Year,
+                Type = i.Type,
+                CreatedAt = i.CreatedAt,
+                UpdatedAt = i.UpdatedAt,
+            })
+            .ToList()
+            .AsReadOnly();
+    }
 
     public void CreateMedia(MediaItem item)
     {
@@ -24,9 +40,9 @@ public sealed class MediaService
         Save();
     }
 
-    public bool DeleteMedia(int id)
+    public bool DeleteMedia(MediaItem item)
     {
-        var existingItem = mediaItems.FirstOrDefault(i => i.Id == id);
+        var existingItem = mediaItems.FirstOrDefault(i => i.Id == item.Id);
 
         if (existingItem == null)
             return false;
