@@ -119,4 +119,47 @@ public sealed class UserMenuService
             }
         }
     }
+
+    public void HandleUpdateRatingMedia()
+    {
+        var existingItem = _mediaService.GetAll();
+
+        if (existingItem == null || !existingItem.Any())
+        {
+            AnsiConsole.MarkupLine("Media does not exist yet.");
+            return;
+        }
+
+        RenderTable.Table(existingItem, "Update Media Rating:");
+
+        var userPrompt = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("Status to Update:")
+                .AddChoices(existingItem.Select(i => $"{i.Title} | {i.Year}"))
+        );
+
+        var isItemExist = existingItem.FirstOrDefault(i => $"{i.Title} | {i.Year}" == userPrompt);
+
+        if (isItemExist != null)
+        {
+            var rating = AnsiConsole.Ask<double>("Enter new Rating: (e.g 1.0 - 10)");
+
+            if (AnsiConsole.Confirm("Sure want to update?"))
+            {
+                var ratingUpdated = new MediaItem
+                {
+                    Title = isItemExist.Title,
+                    Rating = rating,
+                    Year = isItemExist.Year,
+                };
+
+                _mediaService.UpdateRatingMedia(ratingUpdated);
+                AnsiConsole.MarkupLine("Rating Updated!");
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("Cancelled!");
+            }
+        }
+    }
 }
