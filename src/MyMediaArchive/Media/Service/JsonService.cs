@@ -35,7 +35,7 @@ public static class JsonService
     {
         try
         {
-            if (string.IsNullOrWhiteSpace(filePath))
+            if (!File.Exists(filePath) || string.IsNullOrWhiteSpace(filePath))
             {
                 return new T();
             }

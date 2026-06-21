@@ -30,6 +30,30 @@ public sealed class MenuQueryService
         return mediaItem;
     }
 
+    public IReadOnlyList<MediaItem> FindMedia()
+    {
+        AnsiConsole.Clear();
+
+        var search = AnsiConsole.Ask<string>("Find:");
+
+        var existingItem = _mediaService
+            .GetAll()
+            .Where(i => i.Title.Contains(search, StringComparison.OrdinalIgnoreCase))
+            .OrderBy(i => i.Title)
+            .ToList()
+            .AsReadOnly();
+
+        if (existingItem.Count == 0)
+        {
+            AnsiConsole.MarkupLine("Media does not exist yet.");
+            return [];
+        }
+
+        RenderTable.Table(existingItem, $"Found {existingItem.Count} for {search}");
+
+        return existingItem;
+    }
+
     public IReadOnlyList<MediaItem> SeeMediaByType()
     {
         AnsiConsole.Clear();
@@ -37,9 +61,7 @@ public sealed class MenuQueryService
         var type = AnsiConsole.Ask<string>("Enter the Type:");
 
         if (!Enum.TryParse<MediaType>(type, true, out var value))
-        {
             return [];
-        }
 
         var mediaItem = _mediaService
             .GetAll()
