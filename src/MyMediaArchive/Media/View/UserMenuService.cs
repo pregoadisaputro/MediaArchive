@@ -87,30 +87,27 @@ public sealed class UserMenuService
 
         AnsiConsole.WriteLine();
 
-        var userPrompt = AnsiConsole.Prompt(
-            new MultiSelectionPrompt<string>()
+        var selectedItem = AnsiConsole.Prompt(
+            new MultiSelectionPrompt<MediaItem>()
                 .Title("Select Media to Delete:")
-                .AddChoices(existingItem.Select(i => $"{i.Title} | {i.Year}"))
+                .UseConverter(i => $"{i.Title} | {i.Year}")
+                .AddChoices(existingItem)
         );
 
-        if (userPrompt.Count == 0)
+        if (selectedItem.Count == 0)
         {
             AnsiConsole.WriteLine("Cancelled!");
             return;
         }
 
-        if (AnsiConsole.Confirm($"Are you sure want to delete these {userPrompt.Count} items?"))
+        if (AnsiConsole.Confirm($"Are you sure want to delete these {selectedItem.Count} items?"))
         {
-            foreach (var choice in userPrompt)
+            foreach (var choice in selectedItem)
             {
-                var removedItem = existingItem.FirstOrDefault(i =>
-                    $"{i.Title} | {i.Year}" == choice
-                );
-
-                if (removedItem != null)
+                if (choice != null)
                 {
-                    _mediaService.DeleteMedia(removedItem);
-                    AnsiConsole.MarkupLine($"Removed item: {removedItem.Title}");
+                    _mediaService.DeleteMedia(choice);
+                    AnsiConsole.MarkupLine($"Removed item: {choice.Title}");
                 }
             }
         }
@@ -132,36 +129,32 @@ public sealed class UserMenuService
 
         AnsiConsole.WriteLine();
 
-        var userPrompt = AnsiConsole.Prompt(
-            new SelectionPrompt<string>()
+        var selectedItem = AnsiConsole.Prompt(
+            new SelectionPrompt<MediaItem>()
                 .Title("Rating to Update:")
-                .AddChoices(existingItem.Select(i => $"{i.Title} | {i.Year}"))
+                .UseConverter(i => $"{i.Title} | {i.Year}")
+                .AddChoices(existingItem)
         );
 
-        var isItemExist = existingItem.FirstOrDefault(i => $"{i.Title} | {i.Year}" == userPrompt);
+        AnsiConsole.WriteLine();
 
-        if (isItemExist != null)
+        var rating = AnsiConsole.Ask<double>("Enter new Rating: (e.g 1.0 - 10)");
+
+        if (AnsiConsole.Confirm($"Update the rating for {selectedItem.Title} to {rating}?"))
         {
-            AnsiConsole.WriteLine();
-
-            var rating = AnsiConsole.Ask<double>("Enter new Rating: (e.g 1.0 - 10)");
-
-            if (AnsiConsole.Confirm("Sure want to update?"))
+            var ratingUpdated = new MediaItem
             {
-                var ratingUpdated = new MediaItem
-                {
-                    Title = isItemExist.Title,
-                    Rating = rating,
-                    Year = isItemExist.Year,
-                };
+                Title = selectedItem.Title,
+                Rating = rating,
+                Year = selectedItem.Year,
+            };
 
-                _mediaService.UpdateRatingMedia(ratingUpdated);
-                AnsiConsole.MarkupLine($"Rating Updated for {isItemExist.Title}!");
-            }
-            else
-            {
-                AnsiConsole.MarkupLine("Cancelled!");
-            }
+            _mediaService.UpdateRatingMedia(ratingUpdated);
+            AnsiConsole.MarkupLine($"Rating Updated for {selectedItem.Title} | {rating}");
+        }
+        else
+        {
+            AnsiConsole.MarkupLine("Cancelled!");
         }
     }
 }
