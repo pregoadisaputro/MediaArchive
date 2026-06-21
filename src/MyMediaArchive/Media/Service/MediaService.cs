@@ -15,7 +15,7 @@ public sealed class MediaService
 
     public IReadOnlyList<MediaItem> GetAll()
     {
-        return mediaItems.OrderByDescending(i => i.CreatedAt).ToList().AsReadOnly();
+        return mediaItems;
     }
 
     public bool CreateMedia(MediaItem item)
