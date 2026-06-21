@@ -1,7 +1,7 @@
 using MyMediaArchive.Data.Entity;
 using Spectre.Console;
 
-namespace MyMediaArchive.Media.View;
+namespace MyMediaArchive.Media.Components;
 
 public static class RenderTable
 {
@@ -32,9 +32,11 @@ public static class RenderTable
                 $"{item.Year}",
                 $"{item.Type}",
                 $"{item.Status}",
-                $"{item.CreatedAt}",
-                $"{item.UpdatedAt}"
+                $"{item.CreatedAt:yyyy-MM-dd HH:mm}",
+                $"{item.UpdatedAt:yyyy-MM-dd HH:mm}"
             );
         }
+
+        AnsiConsole.Write(table);
     }
 }
