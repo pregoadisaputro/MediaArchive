@@ -2,6 +2,7 @@ using MyMediaArchive.Data.Entity;
 using MyMediaArchive.Data.Enum;
 using MyMediaArchive.Media.Components;
 using MyMediaArchive.Media.Service;
+using Spectre.Console;
 
 namespace MyMediaArchive.Media.View.Service;
 
@@ -24,35 +25,42 @@ public sealed class MenuQueryService
         return mediaItem;
     }
 
-    public IReadOnlyList<MediaItem> SeeMediaByType(string title)
+    public IReadOnlyList<MediaItem> SeeMediaByType()
     {
-        if (string.IsNullOrWhiteSpace(title))
+        AnsiConsole.Clear();
+
+        var type = AnsiConsole.Ask<string>("Enter the Type:");
+
+        if (!Enum.TryParse<MediaType>(type, true, out var value))
+        {
             return [];
+        }
 
         var mediaItem = _mediaService
             .GetAll()
-            .Where(i => i.Title.Equals(title, StringComparison.OrdinalIgnoreCase))
-            .OrderBy(i => i.Title)
+            .Where(i => i.Type == value)
+            .OrderBy(i => i.Type)
             .ToList()
             .AsReadOnly();
 
-        RenderTable.Table(mediaItem, $"Media by {title}");
+        RenderTable.Table(mediaItem, $"Media by {type}");
 
         return mediaItem;
     }
 
-    public IReadOnlyList<MediaItem> SeeMediaByStatus(string status)
+    public IReadOnlyList<MediaItem> SeeMediaByStatus()
     {
-        if (string.IsNullOrWhiteSpace(status))
-            return [];
+        AnsiConsole.Clear();
 
-        if (!Enum.TryParse<MediStatus>(status, true, out var updatedStatus))
+        var status = AnsiConsole.Ask<string>("Enter the Status:");
+
+        if (!Enum.TryParse<MediStatus>(status, true, out var value))
             return [];
 
         var mediaItem = _mediaService
             .GetAll()
-            .Where(i => i.Status == updatedStatus)
-            .OrderBy(i => i.UpdatedAt)
+            .Where(i => i.Status == value)
+            .OrderBy(i => i.Status)
             .ToList()
             .AsReadOnly();
 
