@@ -12,7 +12,7 @@ public static class RenderTable
             return;
         }
 
-        var table = new Table().Title($"{title}").RoundedBorder().Expand();
+        var table = new Table().Title($"{title}").RoundedBorder().ShowRowSeparators().Expand();
 
         table.AddColumn("Title");
         table.AddColumn("Rating");
@@ -28,8 +28,8 @@ public static class RenderTable
                 $"{item.Title}",
                 $"{item.Rating}",
                 $"{item.Year}",
-                $"{item.Type}",
-                $"{item.Status}",
+                Color.ColorForType(item.Type),
+                Color.ColorForStatus(item.Status),
                 $"{item.CreatedAt:yyyy-MM-dd HH:mm}",
                 $"{item.UpdatedAt:yyyy-MM-dd HH:mm}"
             );
