@@ -91,6 +91,8 @@ public sealed class HandlingUserMenuService
             new MultiSelectionPrompt<MediaItem>()
                 .Title("Select Media to Delete:")
                 .NotRequired()
+                .WrapAround()
+                .InstructionsText("Press <space> to toggle, <enter> to confirm/cancel")
                 .UseConverter(i => $"{i.Title} | {i.Year}")
                 .PageSize(10)
                 .MoreChoicesText("Use arrow keys to see more")
@@ -129,6 +131,7 @@ public sealed class HandlingUserMenuService
                 if (choice != null)
                 {
                     _mediaService.DeleteMedia(choice);
+                    AnsiConsole.WriteLine();
                     AnsiConsole.MarkupLine($"Removed item: {choice.Title}");
                 }
             }
@@ -157,7 +160,7 @@ public sealed class HandlingUserMenuService
         var selectedItem = AnsiConsole.Prompt(
             new SelectionPrompt<MediaItem>()
                 .Title("Rating to Update:")
-                .UseConverter(i => $"{i.Title} | {i.Year}")
+                .UseConverter(i => $"{i.Title} | {i.Year} | {i.Rating}")
                 .PageSize(10)
                 .MoreChoicesText("Use arrow keys to see more")
                 .AddChoices(existingItem)
@@ -189,7 +192,10 @@ public sealed class HandlingUserMenuService
             };
 
             _mediaService.UpdateRatingMedia(ratingUpdated);
-            AnsiConsole.MarkupLine($"Rating Updated for {selectedItem.Title} | {rating}");
+            AnsiConsole.WriteLine();
+            AnsiConsole.MarkupLine(
+                $"Rating Updated for {selectedItem.Title} from {selectedItem.Rating} to {rating}?"
+            );
         }
         else
         {
@@ -221,15 +227,11 @@ public sealed class HandlingUserMenuService
                 .AddChoices(existingItem)
         );
 
-        AnsiConsole.WriteLine();
-
         var selectedStatus = AnsiConsole.Prompt(
             new SelectionPrompt<MediStatus>()
                 .Title("Status:")
                 .AddChoices(Enum.GetValues<MediStatus>())
         );
-
-        AnsiConsole.WriteLine();
 
         var summary = new Panel(
             new Rows(
@@ -246,7 +248,7 @@ public sealed class HandlingUserMenuService
 
         if (
             AnsiConsole.Confirm(
-                $"Update the Status for {selectedItem.Title} from {selectedItem.Status} to {selectedStatus}?"
+                $"Status Updated for {selectedItem.Title} from {selectedItem.Status} to {selectedStatus}?"
             )
         )
         {
@@ -258,12 +260,14 @@ public sealed class HandlingUserMenuService
             };
 
             _mediaService.UpdateStatusMedia(statusUpdated);
+            AnsiConsole.WriteLine();
             AnsiConsole.MarkupLine(
                 $"Status Updated for {selectedItem.Title} | {statusUpdated.Status}"
             );
         }
         else
         {
+            AnsiConsole.WriteLine();
             AnsiConsole.MarkupLine("Cancelled!");
         }
     }

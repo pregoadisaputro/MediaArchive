@@ -46,6 +46,8 @@ public sealed class MenuQueryService
 
         var search = AnsiConsole.Ask<string>("Find:");
 
+        AnsiConsole.WriteLine();
+
         var searchResults = _mediaService
             .GetAll()
             .Where(i => i.Title.Contains(search, StringComparison.OrdinalIgnoreCase))
@@ -75,6 +77,8 @@ public sealed class MenuQueryService
             AnsiConsole.MarkupLine("Media does not exist yet");
             return [];
         }
+
+        AnsiConsole.WriteLine();
 
         var userChoice = AnsiConsole.Prompt(
             new SelectionPrompt<MediaType>()

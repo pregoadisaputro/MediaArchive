@@ -28,6 +28,7 @@ public sealed class MainMenu
             var userChoice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                     .Title("Choose:")
+                    .WrapAround()
                     .AddChoiceGroup(
                         "Media Management",
                         new[] { "Add Media", "Delete Media", "Update Rating", "Update Status" }
