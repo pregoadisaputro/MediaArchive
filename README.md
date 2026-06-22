@@ -24,10 +24,8 @@ for my slow ahh laptop :).
 - see by type
 - see by status
 
-<!--## uasge
+## if you want to use it
 
-### you can use your own JSON file 
-
- - must be include Title, Rating, Year, Type, Status
- - put your JSON file into folder src/MyMediaArchive
- - and put your JSON file path into src/MyMediaArchive/Media/Shared/FilePath.cs-->
+- install .NET 10 (https://dotnet.microsoft.com/en-us/download)
+- clone this project
+- and run it with dotnet run
