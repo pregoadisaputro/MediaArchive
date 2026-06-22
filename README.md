@@ -24,10 +24,10 @@ for my low end laptop :).
 - see by type
 - see by status
 
-## uasge
+<!--## uasge
 
 ### you can use your own JSON file 
 
  - must be include Title, Rating, Year, Type, Status
  - put your JSON file into folder src/MyMediaArchive
- - and put your JSON file path into src/MyMediaArchive/Media/Shared/FilePath.cs
+ - and put your JSON file path into src/MyMediaArchive/Media/Shared/FilePath.cs-->
