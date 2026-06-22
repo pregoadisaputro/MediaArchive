@@ -26,6 +26,6 @@ for my slow ahh laptop :).
 
 ## if you want to use it
 
-- install .NET 10 (https://dotnet.microsoft.com/en-us/download)
+- install .NET 10 https://dotnet.microsoft.com/en-us/download
 - clone this project
 - and run it with dotnet run
