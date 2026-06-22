@@ -5,8 +5,8 @@
 MediaArchive is my JSON based personal media tracker on the CLI,
 for (currently): Movies, Music, Games, Books.
 
-im creating this because just for easy and lightweight tools,
-for my low end laptop :).
+im making this because just for easy and lightweight tools,
+for my slow ahh laptop :).
 
 ## what you can do?
 
