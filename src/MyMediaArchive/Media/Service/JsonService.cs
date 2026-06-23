@@ -33,13 +33,18 @@ public static class JsonService
     public static T? LoadData<T>(string filePath)
         where T : new()
     {
+        if (string.IsNullOrWhiteSpace(filePath))
+        {
+            return new T();
+        }
+
+        if (!File.Exists(filePath))
+        {
+            return new T();
+        }
+
         try
         {
-            if (!File.Exists(filePath) || string.IsNullOrWhiteSpace(filePath))
-            {
-                return new T();
-            }
-
             var jsonString = File.ReadAllText(filePath);
             return JsonSerializer.Deserialize<T>(jsonString, _options) ?? new T();
         }
