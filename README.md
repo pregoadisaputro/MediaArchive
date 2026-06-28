@@ -2,7 +2,7 @@
 
 ## what is it?
 
-MediaArchive is my JSON based personal media tracker on the CLI,
+MediaArchive is my JSON file based personal media tracker on the CLI,
 for (currently): Movies, Music, Games, Books.
 
 im making this because just for easy and lightweight tools,
@@ -12,6 +12,7 @@ for my slow ahh laptop :).
 
 ### media management menu selection
 
+- save and load with JSON
 - you can Add media
 - Deleting by current media list of selection
 - Updating by Rating (e.g 1.0 - 10)
